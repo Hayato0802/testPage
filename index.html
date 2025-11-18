@@ -15,9 +15,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -26,8 +23,8 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 800px;
-            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
         }
 
         h1 {
@@ -59,6 +56,7 @@
         .info-box p {
             color: #555;
             line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         .info-box code {
@@ -67,6 +65,40 @@
             border-radius: 3px;
             font-family: 'Courier New', monospace;
             color: #d63384;
+            font-size: 0.9em;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .config-section {
+            background: #e7f3ff;
+            border: 1px solid #2196F3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .config-section h3 {
+            color: #1976D2;
+            margin-bottom: 15px;
+        }
+
+        .config-section pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
         }
 
         .instructions {
@@ -92,69 +124,210 @@
             line-height: 1.6;
         }
 
+        .steps-box {
+            background: #f0f7ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .steps-box h3 {
+            color: #1976D2;
+            margin-bottom: 15px;
+        }
+
+        .steps-box ol {
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .steps-box li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .steps-box strong {
+            color: #1976D2;
+        }
+
         footer {
             margin-top: 40px;
             text-align: center;
             color: #999;
             font-size: 0.9em;
+            padding-bottom: 20px;
         }
 
-        /* Virtual Agent container - このセクションにウィジェットが表示されます */
-        #va-container {
-            margin-top: 30px;
-            min-height: 200px;
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .note p {
+            color: #663c00;
+            margin: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>ServiceNow Virtual Agent</h1>
-        <p class="subtitle">埋め込みウィジェット テストページ</p>
+        <p class="subtitle">Portable Web Client - テストページ</p>
 
         <div class="info-box">
-            <h2>セットアップ方法</h2>
+            <h2>このテストページについて</h2>
             <p>
-                このページでServiceNow Virtual Agentを動作させるには、ServiceNowインスタンスから提供される埋め込みコードが必要です。
+                このページは、ServiceNow Virtual Agentの<strong>Portable Web Client</strong>を外部ウェブサイトに埋め込むためのテンプレートです。
+            </p>
+            <p>
+                Portable Web Clientを使用すると、ServiceNowインスタンス外の任意のウェブサイトにVirtual Agentチャットウィジェットを統合できます。
+            </p>
+        </div>
+
+        <div class="steps-box">
+            <h3>セットアップ手順（ServiceNow側の設定）</h3>
+            <ol>
+                <li><strong>ServiceNowインスタンスにログイン</strong></li>
+                <li><strong>All > Virtual Agent > Designer</strong> に移動</li>
+                <li>使用するVirtual Agentトピックを選択</li>
+                <li><strong>「Portable」</strong>タブをクリック</li>
+                <li><strong>「Website」</strong>オプションを選択</li>
+                <li><strong>「Generate Code」</strong>をクリックして埋め込みコードを生成</li>
+                <li>生成されたスクリプトコードをコピー</li>
+                <li>下記の「実装方法」に従ってこのHTMLファイルに貼り付け</li>
+            </ol>
+        </div>
+
+        <div class="config-section">
+            <h3>実装方法</h3>
+            <p style="color: #333; margin-bottom: 15px;">
+                ServiceNowから取得したスクリプトを以下の<code>&lt;!-- SERVICENOW SCRIPT HERE --&gt;</code>の部分に貼り付けてください：
+            </p>
+            <pre>&lt;!-- SERVICENOW SCRIPT HERE --&gt;
+&lt;script&gt;
+    // ServiceNowから生成されたスクリプトをここに貼り付け
+    // 例:
+    const servicenowInstance = 'https://your-instance.service-now.com';
+
+    function loadScript(src, type) {
+        return new Promise((resolve, reject) => {
+            var script = document.createElement('script');
+            script.src = src;
+            script.type = type || 'text/javascript';
+            script.async = false;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // ServiceNowのチャットスクリプトを読み込み
+    loadScript(servicenowInstance + '/uxasset/...');
+&lt;/script&gt;</pre>
+        </div>
+
+        <div class="info-box">
+            <h2>必要なServiceNow側の設定</h2>
+            <p>Virtual Agentが正しく動作するために、ServiceNowインスタンスで以下の設定が必要です：</p>
+            <ul>
+                <li><strong>CORS (Cross-Origin Resource Sharing) 設定</strong>
+                    <ul>
+                        <li>System Web Services > REST > CORS Rules でCORSルールを作成</li>
+                        <li>このウェブサイトのドメインを許可リストに追加</li>
+                    </ul>
+                </li>
+                <li><strong>システムプロパティ設定</strong>
+                    <ul>
+                        <li><code>com.glide.cs.embed.csp_frame_ancestors</code>: このサイトのURLを設定</li>
+                        <li><code>com.glide.cs.embed.xframe_options</code>: <code>sameorigin</code> に設定</li>
+                    </ul>
+                </li>
+                <li><strong>Portable Web Client の有効化</strong>
+                    <ul>
+                        <li>Virtual Agent Designer でPortable Web Clientを有効化</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <p>
+                <strong>注意:</strong> このページを正しく動作させるには、ServiceNowインスタンスから生成された実際の埋め込みコードと、
+                適切なCORS設定が必要です。セキュリティ上の理由から、ServiceNowインスタンスのURLとトピック設定を正しく行ってください。
             </p>
         </div>
 
         <div class="instructions">
-            <h3>埋め込みコードの設定手順</h3>
+            <h3>カスタマイズオプション</h3>
             <ol>
-                <li>ServiceNowインスタンスにログイン</li>
-                <li>Virtual Agent > Designer に移動</li>
-                <li>対象のVirtual Agentトピックを選択</li>
-                <li>「Portable」タブを開く</li>
-                <li>「Website」オプションを選択</li>
-                <li>生成されたスクリプトコードをコピー</li>
-                <li>このHTMLファイルの <code>&lt;!-- SERVICENOW WIDGET CODE HERE --&gt;</code> 部分に貼り付け</li>
+                <li><strong>色のカスタマイズ:</strong> チャットウィジェットの色はServiceNow側で設定できます</li>
+                <li><strong>位置の調整:</strong> ウィジェットの表示位置（右下、左下など）を変更可能</li>
+                <li><strong>SSO統合:</strong> シングルサインオン (SSO) と統合して認証を実装可能</li>
+                <li><strong>カスタムロゴ:</strong> Virtual Agent Designerでカスタムロゴやアバターを設定可能</li>
             </ol>
         </div>
 
-        <!-- Virtual Agent Widget Container -->
-        <div id="va-container">
-            <!-- SERVICENOW WIDGET CODE HERE -->
-            <!--
-            例:
-            <script type="text/javascript" src="https://your-instance.service-now.com/..."></script>
-            -->
-        </div>
-
         <footer>
-            <p>ServiceNow Virtual Agent Test Page | GitHub Pages</p>
+            <p>ServiceNow Virtual Agent Portable Web Client - Test Page</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">GitHub Pages でホスティング</p>
         </footer>
     </div>
 
-    <!-- ここにServiceNowから提供されるスクリプトを追加 -->
+    <!-- ========================================== -->
+    <!-- SERVICENOW SCRIPT HERE -->
+    <!-- ========================================== -->
     <!--
-    一般的な形式の例:
-    <script type="text/javascript">
-        window.vaSettings = {
-            instanceUrl: 'https://your-instance.service-now.com',
-            // その他の設定
-        };
-    </script>
-    <script type="text/javascript" src="https://your-instance.service-now.com/..."></script>
+        ServiceNowから生成されたスクリプトをここに貼り付けてください
+
+        一般的なスクリプト構造の例:
+
+        <script>
+            const servicenowInstance = 'https://your-instance.service-now.com';
+
+            function loadScript(src, type) {
+                return new Promise((resolve, reject) => {
+                    var script = document.createElement('script');
+                    script.src = src;
+                    script.type = type || 'text/javascript';
+                    script.async = false;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+
+            async function loadChat() {
+                try {
+                    await loadScript(`${servicenowInstance}/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx`, 'module');
+
+                    // ServiceNowChatが利用可能になるまで待機
+                    const checkChat = setInterval(() => {
+                        if (window.ServiceNowChat) {
+                            clearInterval(checkChat);
+
+                            // チャットウィジェットを初期化
+                            window.ServiceNowChat.init({
+                                instanceUrl: servicenowInstance,
+                                // その他の設定オプション
+                            });
+                        }
+                    }, 100);
+                } catch (error) {
+                    console.error('Failed to load ServiceNow chat:', error);
+                }
+            }
+
+            // ページ読み込み後にチャットを初期化
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadChat);
+            } else {
+                loadChat();
+            }
+        </script>
     -->
 
 </body>
