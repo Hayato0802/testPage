@@ -413,6 +413,245 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 ---
 
+## 外部チャットボタンの非アクティブ化方法
+
+外部サイトに埋め込んだVirtual Agentチャットボタンを、ServiceNow側から制御・非アクティブ化する方法をいくつか紹介します。
+
+### 方法1: Portable Web Clientの無効化（即時・完全停止）
+
+**最も簡単で確実な方法**
+
+#### 手順:
+1. **Virtual Agent > Designer** に移動
+2. 対象のVirtual Agentトピックを選択
+3. **「Portable」** タブを開く
+4. **「Disable」** または **「Deactivate」** をクリック
+
+#### 効果:
+- すべての外部サイトでチャットウィジェットが即座に読み込まれなくなる
+- スクリプトのリクエストが404エラーになる
+- 再度有効化すれば復旧可能
+
+#### メリット:
+✅ 即座に全サイトで無効化
+✅ ServiceNow側の操作のみで完結
+✅ 外部サイトのコード変更不要
+
+#### デメリット:
+⚠️ すべての外部サイトで無効化される（個別制御不可）
+⚠️ 完全停止のため、部分的な制御はできない
+
+---
+
+### 方法2: CORS設定の削除・変更（ドメイン単位の制御）
+
+**特定のドメインのみ非アクティブ化したい場合**
+
+#### 手順:
+1. **System Web Services > REST > CORS Rules** に移動
+2. 該当するCORSルールを検索
+3. オプション:
+   - **削除**: ルールを完全に削除
+   - **無効化**: Activeフラグをfalseに設定
+   - **ドメイン変更**: 許可リストから特定ドメインを削除
+
+#### 効果:
+- 指定したドメインからのAPIリクエストがブロックされる
+- チャットボタンは表示されるが、機能しない（CORSエラー）
+
+#### メリット:
+✅ ドメイン単位で個別制御可能
+✅ 他のドメインには影響しない
+
+#### デメリット:
+⚠️ チャットボタンは表示されたまま（エラーになる）
+⚠️ ユーザー体験が悪い（クリックしてもエラー）
+
+---
+
+### 方法3: システムプロパティによる制御
+
+**CSP設定でフレーム埋め込みをブロック**
+
+#### 手順:
+1. **System Properties** に移動
+2. `com.glide.cs.embed.csp_frame_ancestors` を検索
+3. 値から対象ドメインを削除、または値を空にする
+
+#### 効果:
+- Content Security Policyでフレーム埋め込みがブロックされる
+- チャットウィンドウが開かない
+
+#### メリット:
+✅ セキュリティレベルで制御
+✅ ドメイン単位で調整可能
+
+#### デメリット:
+⚠️ 完全な無効化にはCORS設定も変更が必要
+
+---
+
+### 方法4: カスタムAPI/設定ファイルによる動的制御（推奨：柔軟な制御）
+
+**最も柔軟で高度な方法**
+
+#### 実装アイデア:
+
+外部サイト側で、ServiceNowのAPIまたは設定ファイルをチェックしてから、チャットを初期化します。
+
+#### ServiceNow側の準備:
+
+1. **カスタムREST APIを作成**（推奨）
+   - エンドポイント: `/api/now/v1/va/availability`
+   - レスポンス例:
+   ```json
+   {
+     "enabled": true,
+     "maintenance": false,
+     "message": "Virtual Agent is available"
+   }
+   ```
+
+2. **または、Public設定ファイルを用意**
+   - ServiceNowで静的ファイルをホスト
+   - 例: `/va-config.json`
+
+#### 外部サイト側の実装:
+
+```html
+<script type="module">
+    // 1. ServiceNowからチャット有効状態を取得
+    async function checkVAAvailability() {
+        try {
+            const response = await fetch('https://YOUR-INSTANCE.service-now.com/api/now/v1/va/availability');
+            const config = await response.json();
+            return config.enabled && !config.maintenance;
+        } catch (error) {
+            console.error('Failed to check VA availability:', error);
+            return false; // エラー時は無効化
+        }
+    }
+
+    // 2. 有効な場合のみチャットを初期化
+    const isAvailable = await checkVAAvailability();
+
+    if (isAvailable) {
+        import ServiceNowChat from "https://YOUR-INSTANCE.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false"
+            .then(module => {
+                const ServiceNowChat = module.default;
+                const chat = new ServiceNowChat({
+                    instance: "https://YOUR-INSTANCE.service-now.com/",
+                });
+            });
+    } else {
+        console.log('Virtual Agent is currently unavailable');
+        // オプション: ユーザーに代替手段を表示
+    }
+</script>
+```
+
+#### ServiceNow側でのカスタムREST API作成手順:
+
+1. **Scripted REST API** を作成
+   - **Name**: `Virtual Agent Availability API`
+   - **API ID**: `va_availability`
+
+2. **Resource** を追加
+   - **Name**: `Check Availability`
+   - **HTTP method**: `GET`
+   - **Path**: `/availability`
+
+3. **Script**:
+```javascript
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+    // システムプロパティで制御
+    var enabled = gs.getProperty('custom.va.external.enabled', 'true') === 'true';
+    var maintenanceMode = gs.getProperty('custom.va.maintenance.mode', 'false') === 'true';
+
+    var result = {
+        enabled: enabled && !maintenanceMode,
+        maintenance: maintenanceMode,
+        message: enabled ? 'Virtual Agent is available' : 'Virtual Agent is disabled',
+        timestamp: new GlideDateTime().getDisplayValue()
+    };
+
+    response.setStatus(200);
+    response.setBody(result);
+})(request, response);
+```
+
+4. **システムプロパティを作成**:
+   - `custom.va.external.enabled`: `true` / `false`
+   - `custom.va.maintenance.mode`: `true` / `false`
+
+#### メリット:
+✅ ServiceNow側で簡単にON/OFF切り替え可能
+✅ メンテナンスモードなど柔軟な制御
+✅ 外部サイトでエラーが発生しない
+✅ カスタムメッセージを表示可能
+✅ ログ取得や分析が可能
+
+#### デメリット:
+⚠️ 初期実装に手間がかかる
+⚠️ 外部サイト側のコード変更が必要
+⚠️ APIレスポンス待ちの遅延がわずかに発生
+
+---
+
+### 方法5: Virtual Agentトピックの非アクティブ化
+
+**Virtual Agent自体を停止**
+
+#### 手順:
+1. **Virtual Agent > Designer** に移動
+2. 対象のVirtual Agentトピックを選択
+3. **「Deactivate」** をクリック
+
+#### 効果:
+- Virtual Agent全体が停止
+- ポータブルウェブクライアント、サービスポータル両方で使用不可
+
+#### メリット:
+✅ 完全停止
+✅ 簡単
+
+#### デメリット:
+⚠️ サービスポータル側のVirtual Agentも停止
+⚠️ 外部サイトのみの制御ができない
+
+---
+
+## 推奨アプローチ
+
+### シナリオ別の推奨方法:
+
+| シナリオ | 推奨方法 | 理由 |
+|---------|---------|------|
+| **緊急停止が必要** | 方法1: Portable Web Client無効化 | 即座に全停止、最も確実 |
+| **特定ドメインのみ停止** | 方法2: CORS削除 | ドメイン単位で制御可能 |
+| **定期メンテナンス** | 方法4: カスタムAPI | ユーザー体験が良い、柔軟 |
+| **本番環境での運用** | 方法4: カスタムAPI | 最も柔軟で運用しやすい |
+| **テスト環境** | 方法1または方法2 | シンプルで十分 |
+
+---
+
+### ベストプラクティス:
+
+1. **段階的な停止**
+   - まず方法4でメンテナンスモードを有効化
+   - ユーザーに通知
+   - その後、必要に応じて方法1で完全停止
+
+2. **複数の制御レイヤー**
+   - 通常: カスタムAPIで制御（方法4）
+   - 緊急時: Portable Web Client無効化（方法1）
+
+3. **モニタリング**
+   - APIアクセスログを監視
+   - エラー率を追跡
+
+---
+
 ## チェックリスト
 
 埋め込み前に以下を確認してください:
