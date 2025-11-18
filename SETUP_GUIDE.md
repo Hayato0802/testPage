@@ -119,15 +119,39 @@ https://example.com https://another-site.com
 
 ---
 
-### 4. 埋め込みコードの生成（オプション）
+### 4. 埋め込みコードの取得方法
 
-ServiceNowから埋め込みコードを生成することもできます。
+#### オプション A: ServiceNow公式ドキュメントから取得
 
-1. **Virtual Agent > Designer > Portable** タブに移動
-2. **「Generate Code」** をクリック
-3. 生成されたコードをコピー
+**情報源**: [ServiceNow公式ドキュメント](https://www.servicenow.com/docs/ja-JP/bundle/zurich-conversational-interfaces/page/administer/virtual-agent/task/add-portable-va-client-website.html)
 
-※ただし、以下の手順で手動で実装することも可能です。
+公式ドキュメントに記載されている標準的な実装コード：
+
+```html
+<script type="module">
+    import ServiceNowChat from "https://site1.example.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
+    var chat = new ServiceNowChat({
+        instance: "https://site1.example.com/",
+    });
+</script>
+```
+
+**重要**: `site1.example.com` を実際のServiceNowインスタンスURLに置き換えてください。
+
+---
+
+#### オプション B: ServiceNow Designerから生成（可能な場合）
+
+一部のServiceNowバージョンでは、Designer画面からコードを生成できる機能があります：
+
+1. **Virtual Agent > Designer** に移動
+2. 対象のVirtual Agentトピックを選択
+3. **「Portable」** タブを確認
+4. コード生成機能があれば使用（バージョンにより異なる）
+
+**注意**:
+- この機能はServiceNowのバージョンや設定により利用できない場合があります
+- オプションAの公式ドキュメントのコードを使用することを推奨します
 
 ---
 
@@ -421,8 +445,29 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 ## 参考リンク
 
-- [ServiceNow公式ドキュメント - Portable Virtual Agent](https://docs.servicenow.com/)
-- [ServiceNow Community - Virtual Agent](https://www.servicenow.com/community/)
+### 公式ドキュメント
+
+- **[ServiceNow公式 - Portable VA Client埋め込み手順（日本語）](https://www.servicenow.com/docs/ja-JP/bundle/zurich-conversational-interfaces/page/administer/virtual-agent/task/add-portable-va-client-website.html)**
+  - このドキュメントの主要な情報源
+  - 埋め込みコードサンプル、設定スキーマ、パラメータ説明を含む
+
+- **[ServiceNow Docs - Portable Virtual Agent Web Client](https://docs.servicenow.com/en-US/bundle/vancouver-servicenow-platform/page/administer/virtual-agent/task/add-portable-va-client-website.html)**
+  - 英語版の公式ドキュメント
+  - 最新バージョンの情報
+
+### コミュニティリソース
+
+- **[ServiceNow Community - Virtual Agent Forum](https://www.servicenow.com/community/virtual-agent-nlu-forum/bd-p/virtual-agent-nlu-forum)**
+  - コミュニティフォーラムで質問・回答を検索
+
+- **[How to embed Virtual Agent in an external site](https://www.servicenow.com/community/virtual-agent-nlu-articles/how-to-embed-virtual-agent-in-an-external-site-updated-for-tokyo/ta-p/2308092)**
+  - コミュニティ記事：外部サイトへの埋め込み方法
+
+### 参考にした情報源
+
+- ServiceNow公式ドキュメント（Zurich Release）
+- ServiceNowコミュニティフォーラムの事例
+- 実装テストの結果（blueshipcoltddemo4インスタンス）
 
 ---
 
