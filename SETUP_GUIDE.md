@@ -421,31 +421,111 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 **最も簡単で確実な方法**
 
-#### 手順:
+> **⚠️ バージョンによる違いについて**
+> Virtual Agent Designerの「Portable」タブにDisable/Deactivateボタンが表示される場合と、表示されない場合があります。
+> ボタンが見つからない場合は、以下の代替手順A・Bを使用してください。
+
+---
+
+#### 手順（標準UI）:
+
 1. **Virtual Agent > Designer** に移動
 2. 対象のVirtual Agentトピックを選択
 3. **「Portable」** タブを開く
 4. **「Disable」** または **「Deactivate」** をクリック
 
-#### 効果:
-- すべての外部サイトでチャットウィジェットが即座に読み込まれなくなる
-- スクリプトのリクエストが404エラーになる
-- 再度有効化すれば復旧可能
+> **注意**: この手順が実行できない（該当メニューやボタンが存在しない）場合は、以下の代替手順を使用してください。
 
-#### メリット:
+---
+
+#### 代替手順A: `sp_agent_chat_config` テーブルで無効化
+
+**Designer UIでDisableボタンが見つからない場合の確実な方法**
+
+##### ステップ1: 使用中のレコードを特定
+
+1. **Service Portal > Agent Chat** に移動
+2. または、**All > Tables** から `sp_agent_chat_config` テーブルを開く
+
+##### ステップ2: アクティブなレコードを見極める
+
+以下の条件で使用中のレコードを特定:
+
+| フィールド | 確認内容 | 説明 |
+|----------|---------|------|
+| **Active** | `true` | このフィールドが `false` のレコードは使用されていない |
+| **Portal** | ポータル名または空欄 | 特定のポータル用の設定。空欄の場合はデフォルト設定 |
+| **Name** | 設定名 | わかりやすい識別名（例: "Default Chat Config"） |
+
+##### ステップ3: レコードを無効化
+
+1. 使用中のレコード（Active = true）を開く
+2. **Active** フィールドを `false` に変更
+3. **Submit** または **Update** をクリック
+
+##### 効果:
+- Agent Chatおよび**Portable Web Clientが無効化される**
+- すべての外部サイトでチャットウィジェットが読み込まれなくなる
+- スクリプトのリクエストが404エラーまたは無効状態になる
+
+##### 注意点:
+⚠️ この方法は**Service PortalのAgent Chat全体に影響**する可能性があります。
+Portable Web Clientのみを無効化したい場合は、代替手順Bまたは方法4を使用してください。
+
+---
+
+#### 代替手順B: システムプロパティで無効化
+
+**Portable Web Client専用の無効化（Service Portalチャットには影響しない）**
+
+##### 手順:
+
+1. **All > System Properties** に移動
+2. 検索フィールドで `glide.cs.chat.portable.enabled` を検索
+3. プロパティが見つからない場合は、新規作成:
+   - **Name**: `glide.cs.chat.portable.enabled`
+   - **Type**: `true | false`
+   - **Value**: `false`
+4. プロパティが存在する場合は、**Value** を `false` に変更
+5. **Submit** または **Update** をクリック
+
+##### 効果:
+- Portable Web Clientのみが無効化される
+- Service Portalの通常のAgent Chatには影響しない
+- すべての外部サイトでチャットウィジェットが読み込まれなくなる
+
+##### 再有効化:
+プロパティ値を `true` に戻すことで再度有効化できます。
+
+---
+
+#### メリット（全手順共通）:
 ✅ 即座に全サイトで無効化
 ✅ ServiceNow側の操作のみで完結
 ✅ 外部サイトのコード変更不要
+✅ **チャットボタンが完全に非表示になる**（ユーザー体験が最良）
 
-#### デメリット:
+#### デメリット（全手順共通）:
 ⚠️ すべての外部サイトで無効化される（個別制御不可）
 ⚠️ 完全停止のため、部分的な制御はできない
+
+#### どの手順を使うべきか:
+
+| 状況 | 推奨手順 |
+|------|---------|
+| Designer UIにDisableボタンがある | 標準UI手順 |
+| Designer UIにボタンがない＋Service Portalチャットも無効化してOK | 代替手順A（`sp_agent_chat_config`） |
+| Designer UIにボタンがない＋Service Portalチャットは維持したい | 代替手順B（システムプロパティ） |
+| ドメイン単位で個別制御したい | 方法4（カスタムAPI）を参照 |
 
 ---
 
 ### 方法2: CORS設定の削除・変更（ドメイン単位の制御）
 
 **特定のドメインのみ非アクティブ化したい場合**
+
+⚠️ **重要な注意**: この方法では**チャットボタンは表示されたまま**エラーになります。
+「ボタンを非表示にしたい」場合は、**方法1または方法4を使用してください**。
 
 #### 手順:
 1. **System Web Services > REST > CORS Rules** に移動
@@ -457,21 +537,31 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 #### 効果:
 - 指定したドメインからのAPIリクエストがブロックされる
-- チャットボタンは表示されるが、機能しない（CORSエラー）
+- ⚠️ **チャットボタンは表示されるが、機能しない（CORSエラー）**
+- ユーザーがボタンをクリックすると、何も起こらない
 
 #### メリット:
 ✅ ドメイン単位で個別制御可能
 ✅ 他のドメインには影響しない
 
 #### デメリット:
-⚠️ チャットボタンは表示されたまま（エラーになる）
-⚠️ ユーザー体験が悪い（クリックしてもエラー）
+❌ **チャットボタンが表示されたまま**（非表示にならない）
+❌ **ユーザー体験が非常に悪い**（クリックしてもエラー）
+❌ ブラウザコンソールに技術的なエラーメッセージが表示される
+❌ ユーザーが混乱する可能性が高い
+
+#### 推奨しない理由:
+この方法は**ボタンを非表示にできない**ため、多くの場合**推奨されません**。
+ドメイン単位で制御したい場合は、**方法4（カスタムAPI）**の使用を強く推奨します。
 
 ---
 
 ### 方法3: システムプロパティによる制御
 
 **CSP設定でフレーム埋め込みをブロック**
+
+⚠️ **重要な注意**: この方法でも**チャットボタンは表示されたまま**になります。
+「ボタンを非表示にしたい」場合は、**方法1または方法4を使用してください**。
 
 #### 手順:
 1. **System Properties** に移動
@@ -480,14 +570,21 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 #### 効果:
 - Content Security Policyでフレーム埋め込みがブロックされる
-- チャットウィンドウが開かない
+- ⚠️ **チャットボタンは表示されるが、チャットウィンドウが開かない**
+- ボタンをクリックしても反応しない
 
 #### メリット:
 ✅ セキュリティレベルで制御
 ✅ ドメイン単位で調整可能
 
 #### デメリット:
-⚠️ 完全な無効化にはCORS設定も変更が必要
+❌ **チャットボタンが表示されたまま**（非表示にならない）
+❌ **ユーザー体験が悪い**（ボタンをクリックしても反応しない）
+❌ 完全な無効化にはCORS設定も変更が必要
+
+#### 推奨しない理由:
+この方法も**ボタンを非表示にできない**ため、**推奨されません**。
+セキュリティレベルで制御したい場合でも、**方法4（カスタムAPI）**との併用を推奨します。
 
 ---
 
@@ -518,17 +615,42 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 #### 外部サイト側の実装:
 
+✅ **この実装により、チャットボタンは完全に非表示になります**
+
 ```html
 <script type="module">
     // 1. ServiceNowからチャット有効状態を取得
     async function checkVAAvailability() {
         try {
-            const response = await fetch('https://YOUR-INSTANCE.service-now.com/api/now/v1/va/availability');
+            const response = await fetch(
+                'https://YOUR-INSTANCE.service-now.com/api/now/v1/va/availability',
+                {
+                    signal: AbortSignal.timeout(5000) // 5秒タイムアウト
+                }
+            );
+
+            if (!response.ok) {
+                console.warn('VA availability check failed:', response.status);
+                return false;
+            }
+
             const config = await response.json();
+
+            // キャッシュに保存（次回フォールバック用）
+            localStorage.setItem('va_last_known_state', config.enabled);
+
             return config.enabled && !config.maintenance;
         } catch (error) {
             console.error('Failed to check VA availability:', error);
-            return false; // エラー時は無効化
+
+            // オプション: キャッシュされた前回の状態を使用
+            const cachedState = localStorage.getItem('va_last_known_state');
+            if (cachedState !== null) {
+                console.log('Using cached VA state');
+                return cachedState === 'true';
+            }
+
+            return false; // デフォルトは無効化（安全側に倒す）
         }
     }
 
@@ -536,19 +658,49 @@ Domain: https://example.com  // 特定のドメインのみ許可
     const isAvailable = await checkVAAvailability();
 
     if (isAvailable) {
-        import ServiceNowChat from "https://YOUR-INSTANCE.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false"
-            .then(module => {
-                const ServiceNowChat = module.default;
-                const chat = new ServiceNowChat({
-                    instance: "https://YOUR-INSTANCE.service-now.com/",
-                });
-            });
+        // 動的インポート（正しい構文）
+        const module = await import("https://YOUR-INSTANCE.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false");
+        const ServiceNowChat = module.default;
+
+        const chat = new ServiceNowChat({
+            instance: "https://YOUR-INSTANCE.service-now.com/",
+            // オプション設定
+            branding: {
+                bgColor: '#0066cc',
+                primaryColor: '#ffffff',
+            },
+            position: 'right',
+        });
+
+        console.log('Virtual Agent loaded successfully');
     } else {
         console.log('Virtual Agent is currently unavailable');
-        // オプション: ユーザーに代替手段を表示
+
+        // オプション: ユーザーに代替連絡手段を表示
+        showAlternativeContact();
+    }
+
+    // 代替連絡手段の表示（オプション）
+    function showAlternativeContact() {
+        const message = document.createElement('div');
+        message.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #fff3cd; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);';
+        message.innerHTML = `
+            <p style="margin: 0 0 10px 0; font-weight: bold;">チャット機能は現在ご利用いただけません</p>
+            <p style="margin: 0; font-size: 0.9em;">お問い合わせは<a href="mailto:support@example.com">こちら</a></p>
+        `;
+        document.body.appendChild(message);
+
+        // 10秒後に自動的に閉じる
+        setTimeout(() => message.remove(), 10000);
     }
 </script>
 ```
+
+**重要なポイント:**
+- `isAvailable` が `false` の場合、`import` 文が実行されない
+- したがって、**チャットボタンは一切表示されない** ✅
+- エラー時は安全側に倒してボタンを非表示にする
+- タイムアウト処理により、APIレスポンスが遅い場合も対応
 
 #### ServiceNow側でのカスタムREST API作成手順:
 
@@ -598,6 +750,51 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 ---
 
+#### 方法4の簡易版: カスタムAPI不要のチェック方法
+
+カスタムAPIを作成せず、Portable Web Clientの有効/無効状態を直接チェックする方法：
+
+```html
+<script type="module">
+    // Portable Web Clientのスクリプトが存在するかチェック
+    async function checkVAAvailability() {
+        try {
+            const response = await fetch(
+                'https://YOUR-INSTANCE.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false',
+                { method: 'HEAD' }  // HEADリクエストで軽量にチェック
+            );
+            return response.ok;  // 200 OK = 有効、404 = 無効
+        } catch (error) {
+            console.error('VA availability check failed:', error);
+            return false;
+        }
+    }
+
+    const isAvailable = await checkVAAvailability();
+
+    if (isAvailable) {
+        const module = await import("https://YOUR-INSTANCE.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false");
+        const ServiceNowChat = module.default;
+        const chat = new ServiceNowChat({
+            instance: "https://YOUR-INSTANCE.service-now.com/",
+        });
+    } else {
+        console.log('Virtual Agent is disabled');
+    }
+</script>
+```
+
+**この簡易版のメリット:**
+- ✅ カスタムAPI不要
+- ✅ 方法1（Portable Web Client無効化）と自動連動
+- ✅ 実装が簡単
+
+**デメリット:**
+- ⚠️ メンテナンスモードなどの細かい制御ができない
+- ⚠️ 完全に無効化されている場合のみ検出可能
+
+---
+
 ### 方法5: Virtual Agentトピックの非アクティブ化
 
 **Virtual Agent自体を停止**
@@ -621,17 +818,72 @@ Domain: https://example.com  // 特定のドメインのみ許可
 
 ---
 
+## 前提条件別の最適な方法
+
+### ⭐ 重要: ボタンの表示状態による分類
+
+各方法で「チャットボタンが表示されるか」が異なります：
+
+| 方法 | ボタン表示状態 | ユーザー体験 | 推奨度 |
+|------|------------|------------|--------|
+| **方法1** | ✅ 完全に非表示 | ⭐⭐⭐ 最良 | ✅ 推奨 |
+| 方法2 | ❌ 表示される（エラー） | ⭐ 最悪 | ❌ 非推奨 |
+| 方法3 | ❌ 表示される（反応なし） | ⭐ 悪い | ❌ 非推奨 |
+| **方法4** | ✅ 完全に非表示 | ⭐⭐⭐ 最良 | ✅ 強く推奨 |
+| 方法5 | ⚠️ 状況による | ⭐⭐ 普通 | △ 条件付き |
+
+---
+
+### 📋 ケース別の推奨方法
+
+#### ケース1: ボタンを完全に非表示にしたい（最重要）
+
+**使用できる方法:** 方法1 または 方法4 のみ
+
+| 要件 | 推奨方法 | 理由 |
+|------|---------|------|
+| すぐに実装したい | 方法1 | 最短5分で実装可能 |
+| 柔軟な制御が必要 | 方法4 | メンテナンスモード、段階的展開など |
+| カスタムAPI作成が難しい | 方法1 + 方法4簡易版 | HEADリクエストで簡単チェック |
+
+#### ケース2: ドメイン単位で制御したい
+
+**推奨:** 方法4（カスタムAPI）
+
+方法2（CORS）はボタンが表示されたままエラーになるため**推奨しません**。
+
+#### ケース3: メンテナンス時に一時停止したい
+
+**推奨:** 方法4（カスタムAPI）
+
+- メンテナンスモードフラグを用意
+- 代替連絡手段を表示可能
+- ユーザーに適切なメッセージを表示
+
+#### ケース4: 緊急で全停止したい
+
+**推奨:** 方法1（Portable Web Client無効化）
+
+- 最も確実で即座に効果
+- ServiceNow側の1クリックで完了
+
+---
+
 ## 推奨アプローチ
 
-### シナリオ別の推奨方法:
+### シナリオ別の推奨方法（改訂版）:
 
-| シナリオ | 推奨方法 | 理由 |
-|---------|---------|------|
-| **緊急停止が必要** | 方法1: Portable Web Client無効化 | 即座に全停止、最も確実 |
-| **特定ドメインのみ停止** | 方法2: CORS削除 | ドメイン単位で制御可能 |
-| **定期メンテナンス** | 方法4: カスタムAPI | ユーザー体験が良い、柔軟 |
-| **本番環境での運用** | 方法4: カスタムAPI | 最も柔軟で運用しやすい |
-| **テスト環境** | 方法1または方法2 | シンプルで十分 |
+| シナリオ | 推奨方法 | ボタン表示 | 理由 |
+|---------|---------|-----------|------|
+| **ボタンを非表示にしたい** | 方法1または4 | ✅ 非表示 | この前提条件を満たす唯一の方法 |
+| **緊急停止が必要** | 方法1 | ✅ 非表示 | 即座に全停止、最も確実 |
+| **柔軟な制御が必要** | 方法4 | ✅ 非表示 | メンテナンスモード、カスタムメッセージ |
+| **定期メンテナンス** | 方法4 | ✅ 非表示 | ユーザー体験が良い |
+| **本番環境での運用** | 方法4 | ✅ 非表示 | 最も柔軟で運用しやすい |
+| **すぐに実装したい** | 方法1 | ✅ 非表示 | 最短5分、コード変更不要 |
+| **カスタムAPI不要** | 方法1 + 方法4簡易版 | ✅ 非表示 | HEADリクエストで簡単実装 |
+
+⚠️ **方法2と方法3は、ボタンが表示されたままエラーになるため、ほとんどの場合推奨されません。**
 
 ---
 

@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nAdd ServiceNow Virtual Agent test page\n\n- Created responsive HTML page with modern design\n- Added instructions for embedding ServiceNow Virtual Agent\n- Prepared for GitHub Pages deployment\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd ServiceNow Virtual Agent test page\n\n- Created responsive HTML page with modern design\n- Added instructions for embedding ServiceNow Virtual Agent\n- Prepared for GitHub Pages deployment\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd information sources and references to setup guide\n\n- Added official ServiceNow documentation links with descriptions\n- Specified exact source for embedding code (Zurich Release docs)\n- Added community resources and forum links\n- Clarified code generation options (documentation vs Designer)\n- Listed reference sources used in documentation\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
