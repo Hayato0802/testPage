@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow Virtual Agent - Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .info-box h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .info-box code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        /* Virtual Agent container - このセクションにウィジェットが表示されます */
+        #va-container {
+            margin-top: 30px;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ServiceNow Virtual Agent</h1>
+        <p class="subtitle">埋め込みウィジェット テストページ</p>
+
+        <div class="info-box">
+            <h2>セットアップ方法</h2>
+            <p>
+                このページでServiceNow Virtual Agentを動作させるには、ServiceNowインスタンスから提供される埋め込みコードが必要です。
+            </p>
+        </div>
+
+        <div class="instructions">
+            <h3>埋め込みコードの設定手順</h3>
+            <ol>
+                <li>ServiceNowインスタンスにログイン</li>
+                <li>Virtual Agent > Designer に移動</li>
+                <li>対象のVirtual Agentトピックを選択</li>
+                <li>「Portable」タブを開く</li>
+                <li>「Website」オプションを選択</li>
+                <li>生成されたスクリプトコードをコピー</li>
+                <li>このHTMLファイルの <code>&lt;!-- SERVICENOW WIDGET CODE HERE --&gt;</code> 部分に貼り付け</li>
+            </ol>
+        </div>
+
+        <!-- Virtual Agent Widget Container -->
+        <div id="va-container">
+            <!-- SERVICENOW WIDGET CODE HERE -->
+            <!--
+            例:
+            <script type="text/javascript" src="https://your-instance.service-now.com/..."></script>
+            -->
+        </div>
+
+        <footer>
+            <p>ServiceNow Virtual Agent Test Page | GitHub Pages</p>
+        </footer>
+    </div>
+
+    <!-- ここにServiceNowから提供されるスクリプトを追加 -->
+    <!--
+    一般的な形式の例:
+    <script type="text/javascript">
+        window.vaSettings = {
+            instanceUrl: 'https://your-instance.service-now.com',
+            // その他の設定
+        };
+    </script>
+    <script type="text/javascript" src="https://your-instance.service-now.com/..."></script>
+    -->
+
+</body>
+</html>
