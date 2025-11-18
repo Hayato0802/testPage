@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ServiceNow Virtual Agent - Test Page</title>
+
+    <!-- ServiceNow Virtual Agent Portable Web Client -->
+    <script type="module">
+        import ServiceNowChat from "https://blueshipcoltddemo4.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
+
+        // チャットインスタンスを作成して初期化
+        const chat = new ServiceNowChat({
+            instance: "https://blueshipcoltddemo4.service-now.com/",
+            // オプション設定（必要に応じてカスタマイズ）
+            context: {
+                skip_load_history: 1
+            },
+            branding: {
+                bgColor: '#667eea',
+                primaryColor: '#ffffff',
+                hoverColor: '#764ba2',
+                activeColor: '#5568d3',
+            },
+            offsetX: 20,
+            offsetY: 20,
+            position: 'right',
+        });
+    </script>
     <style>
         * {
             margin: 0;
@@ -181,7 +204,10 @@
         <div class="info-box">
             <h2>このテストページについて</h2>
             <p>
-                このページは、ServiceNow Virtual Agentの<strong>Portable Web Client</strong>を外部ウェブサイトに埋め込むためのテンプレートです。
+                このページは、ServiceNow Virtual Agentの<strong>Portable Web Client</strong>が実装されています。
+            </p>
+            <p>
+                <strong>実装状況：</strong> blueshipcoltddemo4.service-now.com インスタンスのチャットウィジェットが画面右下に表示されます。
             </p>
             <p>
                 Portable Web Clientを使用すると、ServiceNowインスタンス外の任意のウェブサイトにVirtual Agentチャットウィジェットを統合できます。
@@ -203,31 +229,33 @@
         </div>
 
         <div class="config-section">
-            <h3>実装方法</h3>
+            <h3>実装済みコード</h3>
             <p style="color: #333; margin-bottom: 15px;">
-                ServiceNowから取得したスクリプトを以下の<code>&lt;!-- SERVICENOW SCRIPT HERE --&gt;</code>の部分に貼り付けてください：
+                このページには既に以下のコードが実装されています（&lt;head&gt;セクション内）：
             </p>
-            <pre>&lt;!-- SERVICENOW SCRIPT HERE --&gt;
-&lt;script&gt;
-    // ServiceNowから生成されたスクリプトをここに貼り付け
-    // 例:
-    const servicenowInstance = 'https://your-instance.service-now.com';
+            <pre>&lt;script type="module"&gt;
+    import ServiceNowChat from "https://blueshipcoltddemo4.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
 
-    function loadScript(src, type) {
-        return new Promise((resolve, reject) => {
-            var script = document.createElement('script');
-            script.src = src;
-            script.type = type || 'text/javascript';
-            script.async = false;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-        });
-    }
-
-    // ServiceNowのチャットスクリプトを読み込み
-    loadScript(servicenowInstance + '/uxasset/...');
+    const chat = new ServiceNowChat({
+        instance: "https://blueshipcoltddemo4.service-now.com/",
+        context: {
+            skip_load_history: 1
+        },
+        branding: {
+            bgColor: '#667eea',
+            primaryColor: '#ffffff',
+            hoverColor: '#764ba2',
+            activeColor: '#5568d3',
+        },
+        offsetX: 20,
+        offsetY: 20,
+        position: 'right',
+    });
 &lt;/script&gt;</pre>
+            <p style="color: #333; margin-top: 15px;">
+                <strong>ポイント：</strong> <code>type="module"</code> を使用してES6モジュールとしてインポートし、
+                <code>new ServiceNowChat()</code> でチャットインスタンスを作成します。
+            </p>
         </div>
 
         <div class="info-box">
@@ -256,18 +284,38 @@
 
         <div class="note">
             <p>
-                <strong>注意:</strong> このページを正しく動作させるには、ServiceNowインスタンスから生成された実際の埋め込みコードと、
-                適切なCORS設定が必要です。セキュリティ上の理由から、ServiceNowインスタンスのURLとトピック設定を正しく行ってください。
+                <strong>重要:</strong> チャットウィジェットが表示されるためには、ServiceNowインスタンス側で適切なCORS設定が必要です。
+                また、Virtual Agent DesignerでPortable Web Clientが有効化されている必要があります。
             </p>
         </div>
 
         <div class="instructions">
-            <h3>カスタマイズオプション</h3>
+            <h3>カスタマイズ可能な設定項目</h3>
+            <p style="color: #856404; margin-bottom: 15px;">
+                上記の実装コード内で以下のオプションをカスタマイズできます：
+            </p>
             <ol>
-                <li><strong>色のカスタマイズ:</strong> チャットウィジェットの色はServiceNow側で設定できます</li>
-                <li><strong>位置の調整:</strong> ウィジェットの表示位置（右下、左下など）を変更可能</li>
-                <li><strong>SSO統合:</strong> シングルサインオン (SSO) と統合して認証を実装可能</li>
-                <li><strong>カスタムロゴ:</strong> Virtual Agent Designerでカスタムロゴやアバターを設定可能</li>
+                <li><strong>色のカスタマイズ:</strong>
+                    <ul style="margin-top: 5px;">
+                        <li><code>bgColor</code>: ボタンの背景色（現在: #667eea）</li>
+                        <li><code>primaryColor</code>: テキスト色（現在: #ffffff）</li>
+                        <li><code>hoverColor</code>: ホバー時の色（現在: #764ba2）</li>
+                        <li><code>activeColor</code>: アクティブ時の色（現在: #5568d3）</li>
+                    </ul>
+                </li>
+                <li><strong>位置の調整:</strong>
+                    <ul style="margin-top: 5px;">
+                        <li><code>position</code>: 'left' または 'right'（現在: right）</li>
+                        <li><code>offsetX</code>, <code>offsetY</code>: ピクセル単位のオフセット（現在: 20px）</li>
+                    </ul>
+                </li>
+                <li><strong>その他のオプション:</strong>
+                    <ul style="margin-top: 5px;">
+                        <li><code>openIcon</code>, <code>closeIcon</code>: カスタムアイコン</li>
+                        <li><code>sizeMultiplier</code>: サイズの倍率調整</li>
+                        <li><code>translations</code>: ラベルの多言語対応</li>
+                    </ul>
+                </li>
             </ol>
         </div>
 
@@ -276,59 +324,6 @@
             <p style="margin-top: 10px; font-size: 0.85em;">GitHub Pages でホスティング</p>
         </footer>
     </div>
-
-    <!-- ========================================== -->
-    <!-- SERVICENOW SCRIPT HERE -->
-    <!-- ========================================== -->
-    <!--
-        ServiceNowから生成されたスクリプトをここに貼り付けてください
-
-        一般的なスクリプト構造の例:
-
-        <script>
-            const servicenowInstance = 'https://your-instance.service-now.com';
-
-            function loadScript(src, type) {
-                return new Promise((resolve, reject) => {
-                    var script = document.createElement('script');
-                    script.src = src;
-                    script.type = type || 'text/javascript';
-                    script.async = false;
-                    script.onload = resolve;
-                    script.onerror = reject;
-                    document.head.appendChild(script);
-                });
-            }
-
-            async function loadChat() {
-                try {
-                    await loadScript(`${servicenowInstance}/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx`, 'module');
-
-                    // ServiceNowChatが利用可能になるまで待機
-                    const checkChat = setInterval(() => {
-                        if (window.ServiceNowChat) {
-                            clearInterval(checkChat);
-
-                            // チャットウィジェットを初期化
-                            window.ServiceNowChat.init({
-                                instanceUrl: servicenowInstance,
-                                // その他の設定オプション
-                            });
-                        }
-                    }, 100);
-                } catch (error) {
-                    console.error('Failed to load ServiceNow chat:', error);
-                }
-            }
-
-            // ページ読み込み後にチャットを初期化
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', loadChat);
-            } else {
-                loadChat();
-            }
-        </script>
-    -->
 
 </body>
 </html>
