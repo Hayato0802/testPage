@@ -8,40 +8,14 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- チャットボタンのアイコンサイズ調整 -->
-    <style>
-        now-requestor-chat-popover-app img,
-        now-requestor-chat-popover-app svg {
-            max-height: 40px !important;
-            max-width: 40px !important;
-            width: auto !important;
-            height: auto !important;
-        }
-    </style>
-
-    <!-- ServiceNow Virtual Agent Portable Web Client（ES6モジュール版） -->
+    <!-- ServiceNow Virtual Agent Portable Web Client -->
     <script type="module">
         import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
-
         const chat = new ServiceNowChat({
             instance: "https://dev2okazakicity.service-now.com/",
             context: {
                 portal_id: '2d35c60a2bd936104461f77ace91bf91',
                 branding_key: 'now_assist_in_va'
-            },
-            branding: {
-                bgColor: '#0056b3',
-                primaryColor: '#ffffff',
-                hoverColor: '#EFEFEF',
-                activeColor: '#AAA',
-                sizeMultiplier: 0.6
-            },
-            offsetX: 20,
-            offsetY: 20,
-            position: 'right',
-            translations: {
-                'Open dialog': 'チャットでお問い合わせ',
-                'Close chat.': 'とじる',
             },
         });
     </script>
@@ -52,13 +26,20 @@
         <p class="subtitle">dev2 Okazaki City - テストページ</p>
 
         <div class="info-box">
-            <h2>このテストページについて</h2>
-            <p>
-                このページは、ServiceNow Virtual Agentの<strong>Portable Web Client</strong>が実装されています。
+            <h2>外部サイトへの埋め込みコード</h2>
+            <p style="color: #333; margin-bottom: 15px;">
+                以下のコードを外部サイトの &lt;head&gt; セクションに追加してください：
             </p>
-            <p>
-                <strong>実装状況：</strong> dev2okazakicity.service-now.com インスタンスのチャットウィジェットが画面右下に表示されます（CORS設定が完了している場合）。
-            </p>
+            <pre>&lt;script type="module"&gt;
+    import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
+    const chat = new ServiceNowChat({
+        instance: "https://dev2okazakicity.service-now.com/",
+        context: {
+            portal_id: '2d35c60a2bd936104461f77ace91bf91',
+            branding_key: 'now_assist_in_va'
+        },
+    });
+&lt;/script&gt;</pre>
         </div>
 
         <div class="note">
