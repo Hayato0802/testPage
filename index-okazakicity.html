@@ -8,7 +8,10 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- ServiceNow Virtual Agent Portable Web Client -->
+    <!-- ========================================== -->
+    <!-- ▼▼▼ 外部サイト埋め込み用コード ここから ▼▼▼ -->
+    <!-- このscriptタグを外部サイトの<head>内にコピーしてください -->
+    <!-- ========================================== -->
     <script type="module">
         import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
         const chat = new ServiceNowChat({
@@ -17,8 +20,14 @@
                 portal_id: '2d35c60a2bd936104461f77ace91bf91',
                 branding_key: 'now_assist_in_va'
             },
+            branding: {
+                bgColor: '#CE9DE3'
+            },
         });
     </script>
+    <!-- ========================================== -->
+    <!-- ▲▲▲ 外部サイト埋め込み用コード ここまで ▲▲▲ -->
+    <!-- ========================================== -->
 </head>
 <body>
     <div class="container">
