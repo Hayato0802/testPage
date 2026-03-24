@@ -11,16 +11,18 @@
     <!-- ServiceNow Virtual Agent チャットボタン（カスタマイズ版） -->
     <script src="https://dev2okazakicity.service-now.com/scripts/now-requestor-chat-popover-app/now-requestor-chat-popover-app.min.js?sysparm_substitute=false"></script>
     <script>
-        var chat = new ServiceNowChat({
-            instance: 'https://dev2okazakicity.service-now.com/',
-            branding: {
-                bgColor: '#333333',       // チャットウィンドウの背景色
-                primaryColor: '#0056b3',  // アクセントカラー
-                sizeMultiplier: 1.0       // サイズ倍率（デフォルト1.0）
-            },
-            offsetX: 20,    // 右端からの距離（px）
-            offsetY: 20,    // 下端からの距離（px）
-            position: 'right'  // ボタン位置（'right' or 'left'）
+        window.addEventListener('DOMContentLoaded', function() {
+            var chat = new ServiceNowChat({
+                instance: 'https://dev2okazakicity.service-now.com/',
+                branding: {
+                    bgColor: '#333333',       // チャットウィンドウの背景色
+                    primaryColor: '#0056b3',  // アクセントカラー
+                    sizeMultiplier: 1.0       // サイズ倍率（デフォルト1.0）
+                },
+                offsetX: 20,    // 右端からの距離（px）
+                offsetY: 20,    // 下端からの距離（px）
+                position: 'right'  // ボタン位置（'right' or 'left'）
+            });
         });
     </script>
 </head>
