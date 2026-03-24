@@ -8,6 +8,17 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- チャットボタンのアイコンサイズ調整 -->
+    <style>
+        now-requestor-chat-popover-app img,
+        now-requestor-chat-popover-app svg {
+            max-height: 40px !important;
+            max-width: 40px !important;
+            width: auto !important;
+            height: auto !important;
+        }
+    </style>
+
     <!-- ServiceNow Virtual Agent Portable Web Client（ES6モジュール版） -->
     <script type="module">
         import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
