@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow Virtual Agent - Okazaki City Test Page</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- ServiceNow Virtual Agent チャットボタン（カスタマイズ版） -->
+    <script src="https://dev2okazakicity.service-now.com/scripts/now-requestor-chat-popover-app/now-requestor-chat-popover-app.min.js?sysparm_substitute=false"></script>
+    <script>
+        var chat = new ServiceNowChat({
+            instance: 'https://dev2okazakicity.service-now.com/',
+            branding: {
+                bgColor: '#333333',       // チャットウィンドウの背景色
+                primaryColor: '#0056b3',  // アクセントカラー
+                sizeMultiplier: 1.0       // サイズ倍率（デフォルト1.0）
+            },
+            offsetX: 20,    // 右端からの距離（px）
+            offsetY: 20,    // 下端からの距離（px）
+            position: 'right'  // ボタン位置（'right' or 'left'）
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>ServiceNow Virtual Agent</h1>
+        <p class="subtitle">Okazaki City - Script Tag 版テストページ</p>
+
+        <div class="info-box">
+            <h2>このテストページについて</h2>
+            <p>
+                このページは、ServiceNow Virtual Agentの<strong>Script Tag 版</strong>が実装されています。
+            </p>
+            <p>
+                <strong>実装状況：</strong> dev2okazakicity.service-now.com インスタンスのチャットウィジェットが画面右下に表示されます（CORS設定が完了している場合）。
+            </p>
+        </div>
+
+        <div class="config-section">
+            <h3>実装済みコード</h3>
+            <p style="color: #333; margin-bottom: 15px;">
+                このページには既に以下のコードが実装されています（&lt;head&gt;セクション内）：
+            </p>
+            <pre>&lt;script src="https://dev2okazakicity.service-now.com/scripts/now-requestor-chat-popover-app/now-requestor-chat-popover-app.min.js?sysparm_substitute=false"&gt;&lt;/script&gt;
+&lt;script&gt;
+    var chat = new ServiceNowChat({
+        instance: 'https://dev2okazakicity.service-now.com/',
+        branding: {
+            bgColor: '#333333',
+            primaryColor: '#0056b3',
+            sizeMultiplier: 1.0
+        },
+        offsetX: 20,
+        offsetY: 20,
+        position: 'right'
+    });
+&lt;/script&gt;</pre>
+            <p style="color: #333; margin-top: 15px;">
+                <strong>ポイント：</strong> ES6モジュール版（<code>type="module"</code> + <code>import</code>）ではなく、
+                従来の<code>&lt;script&gt;</code>タグで直接読み込む方式です。
+            </p>
+        </div>
+
+        <div class="info-box">
+            <h2>ES6モジュール版との違い</h2>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <tr style="background: #f0f0f0;">
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">項目</th>
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Script Tag 版（このページ）</th>
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">ES6モジュール版（index.html）</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">読み込み方法</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;"><code>&lt;script src="..."&gt;</code></td>
+                    <td style="padding: 8px; border: 1px solid #ddd;"><code>import ... from "..."</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">スクリプトURL</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">.min.js（minified）</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">.jsdbx（モジュール）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">インスタンス</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">dev2okazakicity</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">blueshipcoltddemo4</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="note">
+            <p>
+                <strong>注意:</strong> チャットウィジェットを表示するには、ServiceNowインスタンス側でCORS設定とPortable Web Clientの有効化が必要です。
+            </p>
+        </div>
+
+        <footer>
+            <p>ServiceNow Virtual Agent - Okazaki City Script Tag 版 Test Page</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">GitHub Pages でホスティング</p>
+        </footer>
+    </div>
+
+</body>
+</html>
