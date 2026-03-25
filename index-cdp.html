@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow Virtual Agent - CDP Test Page</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        now-requestor-chat-popover-app button:focus,
+        now-requestor-chat-popover-app button:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+
+    <!-- ========================================== -->
+    <!-- ▼▼▼ 外部サイト埋め込み用コード ここから ▼▼▼ -->
+    <!-- ========================================== -->
+    <script type="module">
+        import ServiceNowChat from "https://cdp.city.okazaki.lg.jp/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
+        const chat = new ServiceNowChat({
+            instance: "https://cdp.city.okazaki.lg.jp",
+            context: {
+                portal_id: '2d35c60a2bd936104461f77ace91bf91',
+                branding_key: 'now_assist_in_va'
+            },
+            branding: {
+                bgColor: '#CE9DE3',
+                hoverColor: '#FFF8D1',
+                activeColor: '#FFF8D1'
+            },
+            translations: {
+                'Open dialog': 'チャットを開く',
+                'Open Chat. {0} unread message(s)': '未読メッセージが{0}件あります',
+                'Close Chat': 'チャットを閉じる'
+            },
+        });
+    </script>
+    <!-- ========================================== -->
+    <!-- ▲▲▲ 外部サイト埋め込み用コード ここまで ▲▲▲ -->
+    <!-- ========================================== -->
+</head>
+<body>
+    <div class="container">
+        <h1>ServiceNow Virtual Agent</h1>
+        <p class="subtitle">CDP - テストページ</p>
+
+        <div class="info-box">
+            <h2>外部サイトへの埋め込みコード</h2>
+            <p style="color: #333; margin-bottom: 15px;">
+                以下のコードを外部サイトの &lt;head&gt; セクションに追加してください：
+            </p>
+            <pre>&lt;script type="module"&gt;
+    import ServiceNowChat from "https://cdp.city.okazaki.lg.jp/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
+    const chat = new ServiceNowChat({
+        instance: "https://cdp.city.okazaki.lg.jp",
+        context: {
+            portal_id: '2d35c60a2bd936104461f77ace91bf91',
+            branding_key: 'now_assist_in_va'
+        },
+    });
+&lt;/script&gt;</pre>
+        </div>
+
+        <div class="note">
+            <p>
+                <strong>注意:</strong> チャットウィジェットを表示するには、ServiceNowインスタンス側でCORS設定の完了が必要です。
+            </p>
+        </div>
+
+        <footer>
+            <p>ServiceNow Virtual Agent - CDP Test Page</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">GitHub Pages でホスティング</p>
+        </footer>
+    </div>
+
+</body>
+</html>
