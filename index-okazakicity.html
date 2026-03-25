@@ -8,40 +8,121 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <style>
-        now-requestor-chat-popover-app button:focus,
-        now-requestor-chat-popover-app button:focus-visible {
-            outline: none !important;
-            box-shadow: none !important;
-        }
-    </style>
-
     <!-- ========================================== -->
     <!-- ▼▼▼ 外部サイト埋め込み用コード ここから ▼▼▼ -->
-    <!-- このscriptタグを外部サイトの<head>内にコピーしてください -->
+    <!-- 以下のstyleタグとHTML（チャットボタン＋チャットウィンドウ）を外部サイトに追加してください -->
     <!-- ========================================== -->
-    <script type="module">
-        import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
-        const chat = new ServiceNowChat({
-            instance: "https://dev2okazakicity.service-now.com/",
-            context: {
-                portal_id: '2d35c60a2bd936104461f77ace91bf91',
-                branding_key: 'now_assist_in_va'
-            },
-            branding: {
-                bgColor: '#CE9DE3',
-                hoverColor: '#FFF8D1',
-                activeColor: '#FFF8D1'
-            },
-            translations: {
-                'Open dialog': 'チャットを開く',
-                'Open Chat. {0} unread message(s)': '未読メッセージが{0}件あります',
-                'Close Chat.': 'チャットを閉じる'
-            },
-        });
-    </script>
+    <style>
+        /* チャットボタン */
+        .chat-fab {
+            position: fixed;
+            z-index: 1000 !important;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            bottom: 20px;
+            right: 20px;
+            background: #CE9DE3;
+            padding: 10px 24px 10px 16px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .chat-fab:hover {
+            background: #FFF8D1;
+            color: #333;
+        }
+        .chat-fab:active {
+            background: #FFF8D1;
+            color: #333;
+        }
+        .chat-fab-img {
+            height: 3.8rem;
+            width: auto;
+            margin-right: 8px;
+            aspect-ratio: 1 / 1;
+        }
+        .chat-fab__text {
+            white-space: nowrap;
+        }
+        /* チャットが開いている時 */
+        .chat-fab.chat-open {
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        .chat-fab.chat-open .chat-fab__text {
+            font-size: 1.8rem;
+        }
+        .chat-fab.chat-open .chat-fab-img {
+            height: 3.0rem;
+        }
+
+        /* チャットウィンドウ */
+        .custom-chat-window {
+            position: fixed;
+            right: 24px;
+            bottom: 100px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease-in-out;
+        }
+        .custom-chat-window.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .chat-frame-container {
+            width: 375px;
+            height: 600px;
+            max-height: calc(100vh - 150px);
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 24px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .chat-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 425px) {
+            .chat-fab {
+                padding: 8px 20px 8px 16px !important;
+                bottom: 8px !important;
+                right: 8px !important;
+            }
+            .chat-fab-img {
+                height: 2.8rem !important;
+            }
+            .chat-fab__text span {
+                font-size: 1.2rem !important;
+            }
+            .custom-chat-window {
+                right: 0 !important;
+                bottom: 70px !important;
+                width: 100% !important;
+                height: 85% !important;
+            }
+            .chat-frame-container {
+                width: 100% !important;
+                height: 100% !important;
+                max-height: none !important;
+                border-radius: 0 !important;
+            }
+        }
+    </style>
     <!-- ========================================== -->
-    <!-- ▲▲▲ 外部サイト埋め込み用コード ここまで ▲▲▲ -->
+    <!-- ▲▲▲ 外部サイト埋め込み用コード（CSS）ここまで ▲▲▲ -->
     <!-- ========================================== -->
 </head>
 <body>
@@ -50,20 +131,10 @@
         <p class="subtitle">dev2 Okazaki City - テストページ</p>
 
         <div class="info-box">
-            <h2>外部サイトへの埋め込みコード</h2>
-            <p style="color: #333; margin-bottom: 15px;">
-                以下のコードを外部サイトの &lt;head&gt; セクションに追加してください：
+            <h2>このテストページについて</h2>
+            <p>
+                このページは、ServiceNowポータルと同じ<strong>カスタムチャットボタン + iframe</strong>方式で実装されています。
             </p>
-            <pre>&lt;script type="module"&gt;
-    import ServiceNowChat from "https://dev2okazakicity.service-now.com/uxasset/externals/now-requestor-chat-popover-app/index.jsdbx?sysparm_substitute=false";
-    const chat = new ServiceNowChat({
-        instance: "https://dev2okazakicity.service-now.com/",
-        context: {
-            portal_id: '2d35c60a2bd936104461f77ace91bf91',
-            branding_key: 'now_assist_in_va'
-        },
-    });
-&lt;/script&gt;</pre>
         </div>
 
         <div class="note">
@@ -77,6 +148,61 @@
             <p style="margin-top: 10px; font-size: 0.85em;">GitHub Pages でホスティング</p>
         </footer>
     </div>
+
+    <!-- ========================================== -->
+    <!-- ▼▼▼ 外部サイト埋め込み用コード（HTML）ここから ▼▼▼ -->
+    <!-- 以下を外部サイトの</body>直前に追加してください -->
+    <!-- ========================================== -->
+
+    <!-- チャットボタン -->
+    <a class="chat-fab" id="chat" onclick="toggleChat(event)">
+        <img src="https://dev2okazakicity.service-now.com/db_image.do?name=sn_nava_config.okazaemon_close_btn.png"
+             alt="" class="chat-fab-img" />
+        <span class="chat-fab__text">
+            <span id="chat-btn-text">チャットでお問い合わせ</span>
+        </span>
+    </a>
+
+    <!-- チャットウィンドウ -->
+    <div class="custom-chat-window" id="chat-window">
+        <div class="chat-frame-container">
+            <iframe id="chat-frame" class="chat-frame" src="" allow="microphone"></iframe>
+        </div>
+    </div>
+
+    <script>
+        var chatOpen = false;
+        var chatLoaded = false;
+        var chatUrl = 'https://dev2okazakicity.service-now.com/sn_va_web_client_app_embed.do'
+            + '?sysparm_portal_id=2d35c60a2bd936104461f77ace91bf91'
+            + '&sysparm_branding_key=now_assist_in_va';
+
+        function toggleChat(event) {
+            event.preventDefault();
+            var chatWindow = document.getElementById('chat-window');
+            var chatBtn = document.getElementById('chat');
+            var chatBtnText = document.getElementById('chat-btn-text');
+
+            if (!chatOpen) {
+                if (!chatLoaded) {
+                    document.getElementById('chat-frame').src = chatUrl;
+                    chatLoaded = true;
+                }
+                chatWindow.classList.add('open');
+                chatBtn.classList.add('chat-open');
+                chatBtnText.textContent = 'とじる';
+                chatOpen = true;
+            } else {
+                chatWindow.classList.remove('open');
+                chatBtn.classList.remove('chat-open');
+                chatBtnText.textContent = 'チャットでお問い合わせ';
+                chatOpen = false;
+            }
+        }
+    </script>
+    <!-- ========================================== -->
+    <!-- ▲▲▲ 外部サイト埋め込み用コード（HTML）ここまで ▲▲▲ -->
+    <!-- ========================================== -->
 
 </body>
 </html>
