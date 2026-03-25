@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow Virtual Agent - iframe版テスト</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .chat-fab {
+            position: fixed;
+            z-index: 1000 !important;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            bottom: 20px;
+            right: 20px;
+            background: #CE9DE3;
+            padding: 10px 24px 10px 16px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .chat-fab:hover { background: #FFF8D1; color: #333; }
+        .chat-fab:active { background: #FFF8D1; color: #333; }
+        .chat-fab-img { height: 3.8rem; width: auto; margin-right: 8px; aspect-ratio: 1 / 1; }
+        .chat-fab__text { white-space: nowrap; }
+        .chat-fab.chat-open { transform: scale(0.9); }
+        .chat-fab.chat-open .chat-fab-img { height: 3.0rem; }
+        .custom-chat-window {
+            position: fixed; right: 24px; bottom: 100px; z-index: 9999;
+            opacity: 0; visibility: hidden; transform: translateY(20px);
+            transition: all 0.3s ease-in-out;
+        }
+        .custom-chat-window.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-frame-container {
+            width: 375px; height: 600px; max-height: calc(100vh - 150px);
+            background-color: #fff; border-radius: 10px;
+            box-shadow: 0 5px 24px rgba(0, 0, 0, 0.2); overflow: hidden; border: 1px solid #ddd;
+        }
+        .chat-frame { width: 100%; height: 100%; border: none; display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ServiceNow Virtual Agent</h1>
+        <p class="subtitle">dev2 Okazaki City - iframe版テスト</p>
+        <div class="note">
+            <p><strong>検証目的:</strong> iframe方式がEdge通常モードで動作するか確認するためのテストページです。</p>
+        </div>
+        <footer>
+            <p>ServiceNow Virtual Agent - iframe版テスト</p>
+        </footer>
+    </div>
+
+    <a class="chat-fab" id="chat" onclick="toggleChat(event)">
+        <img src="https://dev2okazakicity.service-now.com/sn_nava_config.okazaemon_close_btn.png"
+             alt="" class="chat-fab-img" />
+        <span class="chat-fab__text">
+            <span id="chat-btn-text">チャットでお問い合わせ</span>
+        </span>
+    </a>
+
+    <div class="custom-chat-window" id="chat-window">
+        <div class="chat-frame-container">
+            <iframe id="chat-frame" class="chat-frame" src="" allow="microphone"></iframe>
+        </div>
+    </div>
+
+    <script>
+        var chatOpen = false;
+        var chatLoaded = false;
+        var chatUrl = 'https://dev2okazakicity.service-now.com/sn_va_web_client_app_embed.do'
+            + '?sysparm_portal_id=2d35c60a2bd936104461f77ace91bf91'
+            + '&sysparm_branding_key=now_assist_in_va';
+
+        function toggleChat(event) {
+            event.preventDefault();
+            var chatWindow = document.getElementById('chat-window');
+            var chatBtn = document.getElementById('chat');
+            var chatBtnText = document.getElementById('chat-btn-text');
+            if (!chatOpen) {
+                if (!chatLoaded) {
+                    document.getElementById('chat-frame').src = chatUrl;
+                    chatLoaded = true;
+                }
+                chatWindow.classList.add('open');
+                chatBtn.classList.add('chat-open');
+                chatBtnText.textContent = 'とじる';
+                chatOpen = true;
+            } else {
+                chatWindow.classList.remove('open');
+                chatBtn.classList.remove('chat-open');
+                chatBtnText.textContent = 'チャットでお問い合わせ';
+                chatOpen = false;
+            }
+        }
+    </script>
+</body>
+</html>
