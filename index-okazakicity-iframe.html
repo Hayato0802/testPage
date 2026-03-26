@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ServiceNow Virtual Agent - iframe版テスト</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- ================================================================ -->
+    <!-- ▼▼▼ 移植対象（1/3）：CSS ▼▼▼                                     -->
+    <!-- 外部サイトの <head> 内、既存の <style> タグ内に追加してください      -->
+    <!-- ================================================================ -->
     <style>
+        /* --- チャットボタン --- */
         .chat-fab {
             position: fixed;
             z-index: 1000 !important;
@@ -28,8 +34,12 @@
         .chat-fab:active { background: #FFF8D1; color: #333; }
         .chat-fab-img { height: 3.8rem; width: auto; margin-right: 8px; aspect-ratio: 1 / 1; }
         .chat-fab__text { white-space: nowrap; }
+
+        /* --- チャットボタン（開いている時） --- */
         .chat-fab.chat-open { transform: scale(0.9); }
         .chat-fab.chat-open .chat-fab-img { height: 3.0rem; }
+
+        /* --- チャットウィンドウ --- */
         .custom-chat-window {
             position: fixed; right: 24px; bottom: 100px; z-index: 9999;
             opacity: 0; visibility: hidden; transform: translateY(20px);
@@ -42,7 +52,29 @@
             box-shadow: 0 5px 24px rgba(0, 0, 0, 0.2); overflow: hidden; border: 1px solid #ddd;
         }
         .chat-frame { width: 100%; height: 100%; border: none; display: block; }
+
+        /* --- モバイル対応 --- */
+        @media (max-width: 425px) {
+            .chat-fab {
+                padding: 8px 20px 8px 16px !important;
+                bottom: 8px !important;
+                right: 8px !important;
+            }
+            .chat-fab-img { height: 2.8rem !important; }
+            .chat-fab__text span { font-size: 1.2rem !important; }
+            .custom-chat-window {
+                right: 0 !important; bottom: 70px !important;
+                width: 100% !important; height: 85% !important;
+            }
+            .chat-frame-container {
+                width: 100% !important; height: 100% !important;
+                max-height: none !important; border-radius: 0 !important;
+            }
+        }
     </style>
+    <!-- ================================================================ -->
+    <!-- ▲▲▲ 移植対象（1/3）：CSS ここまで ▲▲▲                             -->
+    <!-- ================================================================ -->
 </head>
 <body>
     <div class="container">
@@ -56,6 +88,12 @@
         </footer>
     </div>
 
+    <!-- ================================================================ -->
+    <!-- ▼▼▼ 移植対象（2/3）：HTML ▼▼▼                                    -->
+    <!-- 外部サイトの </body> 直前に追加してください                         -->
+    <!-- ================================================================ -->
+
+    <!-- チャットボタン -->
     <a class="chat-fab" id="chat" onclick="toggleChat(event)">
         <img src="https://dev2okazakicity.service-now.com/sn_nava_config.okazaemon_close_btn.png"
              alt="" class="chat-fab-img" />
@@ -64,12 +102,21 @@
         </span>
     </a>
 
+    <!-- チャットウィンドウ -->
     <div class="custom-chat-window" id="chat-window">
         <div class="chat-frame-container">
             <iframe id="chat-frame" class="chat-frame" src="" allow="microphone"></iframe>
         </div>
     </div>
 
+    <!-- ================================================================ -->
+    <!-- ▲▲▲ 移植対象（2/3）：HTML ここまで ▲▲▲                            -->
+    <!-- ================================================================ -->
+
+    <!-- ================================================================ -->
+    <!-- ▼▼▼ 移植対象（3/3）：JavaScript ▼▼▼                              -->
+    <!-- HTMLの直後（</body>直前）に追加してください                         -->
+    <!-- ================================================================ -->
     <script>
         var chatOpen = false;
         var chatLoaded = false;
@@ -99,5 +146,8 @@
             }
         }
     </script>
+    <!-- ================================================================ -->
+    <!-- ▲▲▲ 移植対象（3/3）：JavaScript ここまで ▲▲▲                      -->
+    <!-- ================================================================ -->
 </body>
 </html>
