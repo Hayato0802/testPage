@@ -14,6 +14,14 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
+        /* --- モバイルでチャットボタンを小さく --- */
+        @media (max-width: 425px) {
+            now-requestor-chat-popover-app {
+                transform: scale(0.8);
+                transform-origin: bottom right;
+            }
+        }
     </style>
 
     <!-- ========================================== -->

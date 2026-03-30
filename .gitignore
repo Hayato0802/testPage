@@ -1,1 +1,6 @@
 EXTERNAL_EMBED_GUIDE.md
+
+# 開発資材（ServiceNow XMLエクスポート・コピペ用ファイル等）
+sys_ui_page_*.xml
+copypaste_*.txt
+TRANSLATION_IMPLEMENTATION.md
