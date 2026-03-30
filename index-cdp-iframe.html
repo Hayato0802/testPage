@@ -20,8 +20,8 @@
             gap: 1rem;
             text-decoration: none;
             cursor: pointer;
-            bottom: 1rem;
-            right: 0.8rem;
+            bottom: 130px;
+            right: 10px;
             background: #ffeef7;
             color: #000;
             padding: 0.8rem 1.6rem;
@@ -43,13 +43,13 @@
 
         /* --- チャットウィンドウ --- */
         .custom-chat-window {
-            position: fixed; right: 24px; bottom: 100px; z-index: 9999;
+            position: fixed; right: 24px; bottom: 200px; z-index: 9999;
             opacity: 0; visibility: hidden; transform: translateY(20px);
             transition: all 0.3s ease-in-out;
         }
         .custom-chat-window.open { opacity: 1; visibility: visible; transform: translateY(0); }
         .chat-frame-container {
-            width: 375px; height: 600px; max-height: calc(100vh - 150px);
+            width: 375px; height: 600px; max-height: calc(100vh - 250px);
             background-color: #fff; border-radius: 10px;
             box-shadow: 0 5px 24px rgba(0, 0, 0, 0.2); overflow: hidden; border: 1px solid #ddd;
         }
