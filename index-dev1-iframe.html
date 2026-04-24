@@ -12,7 +12,7 @@
     <!-- ================================================================ -->
     <style>
         /* --- チャットボタン --- */
-        .chat-fab {
+        .sn-va-fab {
             position: fixed;
             z-index: 1000 !important;
             display: inline-flex;
@@ -20,8 +20,8 @@
             gap: 1rem;
             text-decoration: none;
             cursor: pointer;
-            bottom: 130px;
-            right: 10px;
+            bottom: 30px;
+            left: 10px;
             background: #ffeef7;
             color: #000;
             padding: 0.8rem 1.6rem;
@@ -31,45 +31,49 @@
             font-weight: 600;
             box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.28);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: auto;
         }
-        .chat-fab:hover { background: #FFF8D1; color: #333; }
-        .chat-fab:active { background: #FFF8D1; color: #333; }
-        .chat-fab-img { height: 2.4rem; width: auto; margin-right: .5rem; aspect-ratio: 1 / 1; }
-        .chat-fab__text { white-space: nowrap; }
+        @media (hover: hover) {
+            .sn-va-fab:hover { background: #FFF8D1; color: #333; }
+        }
+        .sn-va-fab:active { background: #FFF8D1; color: #333; }
+        .sn-va-fab-img { height: 2.4rem; width: auto; margin-right: .5rem; aspect-ratio: 1 / 1; }
+        .sn-va-fab__text { white-space: nowrap; }
 
         /* --- チャットボタン（開いている時） --- */
-        .chat-fab.chat-open { transform: scale(0.9); }
-        .chat-fab.chat-open .chat-fab-img { height: 3.0rem; }
+        .sn-va-fab.sn-va-open { transform: scale(0.9); }
+        .sn-va-fab.sn-va-open .sn-va-fab-img { height: 3.0rem; }
 
         /* --- チャットウィンドウ --- */
-        .custom-chat-window {
-            position: fixed; right: 24px; bottom: 200px; z-index: 9999;
+        .sn-va-window {
+            position: fixed; left: 24px; bottom: 140px; z-index: 9999;
             opacity: 0; visibility: hidden; transform: translateY(20px);
             transition: all 0.3s ease-in-out;
         }
-        .custom-chat-window.open { opacity: 1; visibility: visible; transform: translateY(0); }
-        .chat-frame-container {
-            width: 375px; height: 600px; max-height: calc(100vh - 250px);
+        .sn-va-window.sn-va-open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .sn-va-frame-container {
+            width: 375px; height: 600px; max-height: calc(100vh - 150px);
             background-color: #fff; border-radius: 10px;
             box-shadow: 0 5px 24px rgba(0, 0, 0, 0.2); overflow: hidden; border: 1px solid #ddd;
         }
-        .chat-frame { width: 100%; height: 100%; border: none; display: block; }
+        .sn-va-frame { width: 100%; height: 100%; border: none; display: block; }
 
         /* --- モバイル対応 --- */
         @media (max-width: 480px) {
-            .chat-fab {
-                padding: 5px 12px 5px 10px !important;
-                right: 8px !important;
+            .sn-va-fab {
+                padding: 5px 10px 5px 12px !important;
+                left: 8px !important;
+                bottom: 70px !important;
                 font-size: 0.75rem !important;
                 gap: 0.4rem !important;
             }
-            .chat-fab-img { height: 1.6rem !important; margin-right: 0 !important; }
-            .chat-fab__text span { font-size: 0.75rem !important; }
-            .custom-chat-window {
-                right: 0 !important; top: 0 !important; bottom: auto !important;
-                width: 100% !important; height: calc(100vh - 180px) !important;
+            .sn-va-fab-img { height: 1.6rem !important; margin-right: 0 !important; }
+            .sn-va-fab__text span { font-size: 0.75rem !important; }
+            .sn-va-window {
+                left: 0 !important; top: 0 !important; bottom: 150px !important;
+                width: 100% !important; height: auto !important;
             }
-            .chat-frame-container {
+            .sn-va-frame-container {
                 width: 100% !important; height: 100% !important;
                 max-height: none !important; border-radius: 0 !important;
             }
@@ -97,18 +101,18 @@
     <!-- ================================================================ -->
 
     <!-- チャットボタン -->
-    <a class="chat-fab" id="chat" onclick="toggleChat(event)">
+    <a class="sn-va-fab" id="sn-va-fab" onclick="toggleChat(event)">
         <img src="https://dev1okazakicity.service-now.com/sn_nava_config.okazaemon_close_btn.png"
-             alt="" class="chat-fab-img" />
-        <span class="chat-fab__text">
-            <span id="chat-btn-text">チャットでお問い合わせ</span>
+             alt="" class="sn-va-fab-img" />
+        <span class="sn-va-fab__text">
+            <span id="sn-va-btn-text">チャットでお問い合わせ</span>
         </span>
     </a>
 
     <!-- チャットウィンドウ -->
-    <div class="custom-chat-window" id="chat-window">
-        <div class="chat-frame-container">
-            <iframe id="chat-frame" class="chat-frame" src="" allow="microphone"></iframe>
+    <div class="sn-va-window" id="sn-va-window">
+        <div class="sn-va-frame-container">
+            <iframe id="sn-va-frame" class="sn-va-frame" src="" allow="microphone"></iframe>
         </div>
     </div>
 
@@ -130,21 +134,21 @@
 
         function toggleChat(event) {
             event.preventDefault();
-            var chatWindow = document.getElementById('chat-window');
-            var chatBtn = document.getElementById('chat');
-            var chatBtnText = document.getElementById('chat-btn-text');
+            var chatWindow = document.getElementById('sn-va-window');
+            var chatBtn = document.getElementById('sn-va-fab');
+            var chatBtnText = document.getElementById('sn-va-btn-text');
             if (!chatOpen) {
                 if (!chatLoaded) {
-                    document.getElementById('chat-frame').src = chatUrl;
+                    document.getElementById('sn-va-frame').src = chatUrl;
                     chatLoaded = true;
                 }
-                chatWindow.classList.add('open');
-                chatBtn.classList.add('chat-open');
+                chatWindow.classList.add('sn-va-open');
+                chatBtn.classList.add('sn-va-open');
                 chatBtnText.textContent = 'とじる';
                 chatOpen = true;
             } else {
-                chatWindow.classList.remove('open');
-                chatBtn.classList.remove('chat-open');
+                chatWindow.classList.remove('sn-va-open');
+                chatBtn.classList.remove('sn-va-open');
                 chatBtnText.textContent = 'チャットでお問い合わせ';
                 chatOpen = false;
             }
